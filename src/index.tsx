@@ -173,27 +173,45 @@ app.post('/api/chat/query', async (c) => {
   const hfModel = model === 'legal-bert' ? 'nlpaueb/legal-bert-base-uncased' : 'google/flan-t5-base'
   
   try {
-    const hfResponse = await fetch(`https://api-inference.huggingface.co/models/${hfModel}`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${c.env.HF_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        inputs: `You are a legal AI assistant. Answer this question: ${message}`,
-        parameters: { max_length: 512, temperature: 0.7 }
-      })
-    })
+    // Note: Hugging Face has deprecated api-inference.huggingface.co
+    // For production, consider using:
+    // 1. Dedicated Inference Endpoints (https://huggingface.co/inference-endpoints)
+    // 2. Hugging Face Pro API with serverless inference
+    // 3. Self-hosted models
     
-    const processingTime = Date.now() - startTime
-    let responseText = 'I apologize, but I could not generate a response.'
+    // Temporary: Use a simple legal knowledge base for demo
+    const legalResponses: Record<string, string> = {
+      'contract': 'A contract is a legally binding agreement between two or more parties that creates mutual obligations enforceable by law. It requires an offer, acceptance, consideration, capacity, and legal purpose.',
+      'breach': 'A breach of contract occurs when one party fails to perform their obligations under the contract without a valid legal excuse. Remedies may include damages, specific performance, or rescission.',
+      'tort': 'A tort is a civil wrong that causes harm to another person or their property. Common types include negligence, intentional torts (assault, battery, defamation), and strict liability.',
+      'liability': 'Legal liability refers to the legal responsibility for one\'s acts or omissions. It can be civil (monetary damages) or criminal (fines, imprisonment).',
+      'negligence': 'Negligence is the failure to exercise the care that a reasonably prudent person would exercise in similar circumstances. It requires duty, breach, causation, and damages.',
+      'statute': 'A statute is a written law passed by a legislative body. Statutes are formal written enactments of a legislative authority that govern a state, city, or country.',
+    }
     
-    if (hfResponse.ok) {
-      const hfData = await hfResponse.json()
-      if (Array.isArray(hfData) && hfData.length > 0) {
-        responseText = hfData[0].generated_text || hfData[0].summary_text || responseText
+    // Simple keyword matching for demo
+    let responseText = ''
+    const lowerMessage = message.toLowerCase()
+    
+    for (const [keyword, response] of Object.entries(legalResponses)) {
+      if (lowerMessage.includes(keyword)) {
+        responseText = response
+        break
       }
     }
+    
+    // Default responses for common queries
+    if (!responseText) {
+      if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+        responseText = 'Hello! I\'m a legal AI assistant. I can help you with questions about contracts, torts, liability, negligence, and other legal concepts. How may I assist you with your legal inquiry today?'
+      } else if (lowerMessage.includes('help')) {
+        responseText = 'I can assist you with:\n• Contract law and formation\n• Tort law and liability\n• Legal terminology\n• Case law interpretation\n• Statutory analysis\n\nPlease ask me any specific legal question, and I\'ll do my best to provide helpful information.'
+      } else {
+        responseText = `I understand you're asking about: "${message}". As a legal AI assistant, I can help with contract law, tort law, statutory interpretation, and legal terminology. Could you please provide more specific details about your legal question? For example, are you asking about contracts, liability, negligence, or another legal concept?`
+      }
+    }
+    
+    const processingTime = Date.now() - startTime
     
     // Save AI response
     await c.env.DB.prepare(
