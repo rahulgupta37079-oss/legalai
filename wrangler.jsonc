@@ -13,14 +13,11 @@
       "database_id": "2e62f66d-97ad-432d-a6b5-3c50db2a7eac",
       "migrations_dir": "migrations"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "DOCUMENTS",
+      "bucket_name": "legal-ai-documents"
+    }
   ]
-  // R2 bucket - Enable R2 in Cloudflare Dashboard first:
-  // https://dash.cloudflare.com/ -> R2 -> Enable R2
-  // Then uncomment below and run: npx wrangler r2 bucket create legal-ai-documents
-  // "r2_buckets": [
-  //   {
-  //     "binding": "DOCUMENTS",
-  //     "bucket_name": "legal-ai-documents"
-  //   }
-  // ]
 }

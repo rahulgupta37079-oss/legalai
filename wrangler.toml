@@ -8,3 +8,7 @@ binding = "DB"
 database_name = "legal-ai-production"
 database_id = "2e62f66d-97ad-432d-a6b5-3c50db2a7eac"
 migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "DOCUMENTS"
+bucket_name = "legal-ai-documents"
