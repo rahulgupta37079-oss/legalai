@@ -79,9 +79,14 @@ open http://localhost:3000
   - **Legal-BERT**: Specialized BERT model for legal text understanding
   - **FLAN-T5 Base**: Google's instruction-tuned model
   - **FLAN-T5 Large**: Enhanced version with better performance
+- **Document-Aware Conversations** 🆕:
+  - Upload documents directly in chat interface
+  - Ask questions about specific uploaded documents
+  - Document context automatically included in AI responses
+  - Support for summarization, key point extraction, and risk analysis
+  - Visual document info display in chat
 - Context-aware legal assistance
 - Persistent chat history
-- Document-specific conversations
 - Real-time response streaming (via polling)
 - Confidence scoring and performance metrics
 
@@ -404,7 +409,7 @@ Get current authenticated user.
 ### Chat Endpoints
 
 #### POST `/api/chat/query`
-Send a message to AI.
+Send a message to AI (with optional document context).
 
 **Headers**: `Authorization: Bearer <token>`
 
@@ -413,7 +418,8 @@ Send a message to AI.
 {
   "message": "What is a breach of contract?",
   "model": "flan-t5-base",
-  "session_id": 1
+  "session_id": 1,
+  "document_id": 42  // Optional: Include for document-aware chat
 }
 ```
 
@@ -427,6 +433,35 @@ Send a message to AI.
     "content": "A breach of contract occurs when...",
     "model_used": "google/flan-t5-base",
     "processing_time_ms": 1250
+  }
+}
+```
+
+#### POST `/api/chat/sessions`
+Create a new chat session (optionally with document context).
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Request**:
+```json
+{
+  "title": "Contract Review Discussion",
+  "ai_model": "flan-t5-base",
+  "document_id": 42  // Optional: Link session to document
+}
+```
+
+**Response**:
+```json
+{
+  "success": true,
+  "session": {
+    "id": 5,
+    "user_id": 1,
+    "title": "Contract Review Discussion",
+    "ai_model": "flan-t5-base",
+    "document_id": 42,
+    "created_at": "2026-02-01T14:30:00Z"
   }
 }
 ```
@@ -491,6 +526,26 @@ List all documents.
 {
   "success": true,
   "documents": [ /* array of documents */ ]
+}
+```
+
+#### GET `/api/documents/:id`
+Get a specific document by ID.
+
+**Headers**: `Authorization: Bearer <token>`
+
+**Response**:
+```json
+{
+  "success": true,
+  "document": {
+    "id": 1,
+    "title": "Employment Contract",
+    "filename": "contract.pdf",
+    "file_size": 524288,
+    "document_type": "contract",
+    "uploaded_at": "2026-02-01T12:00:00Z"
+  }
 }
 ```
 
@@ -715,6 +770,9 @@ npm run test:integration
 - [x] User authentication with JWT
 - [x] Document upload to R2 storage
 - [x] AI chat with Hugging Face integration
+- [x] **Document-aware chat interface** 🆕
+- [x] **In-chat document upload** 🆕
+- [x] **Context-based document analysis** 🆕
 - [x] Chat history persistence
 - [x] Admin dashboard
 - [x] Professional UI with Tailwind CSS
