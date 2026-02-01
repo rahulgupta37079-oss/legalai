@@ -74,17 +74,42 @@ open http://localhost:3000
 - Document versioning support
 - File size limit: 50MB per document
 
-#### 💬 **AI-Powered Chat**
+#### 💬 **AI-Powered Chat with Comprehensive Legal Knowledge** 🆕
 - Multiple AI model support:
   - **Legal-BERT**: Specialized BERT model for legal text understanding
   - **FLAN-T5 Base**: Google's instruction-tuned model
   - **FLAN-T5 Large**: Enhanced version with better performance
-- **Document-Aware Conversations** 🆕:
+- **Document-Aware Conversations**:
   - Upload documents directly in chat interface
   - Ask questions about specific uploaded documents
   - Document context automatically included in AI responses
   - Support for summarization, key point extraction, and risk analysis
   - Visual document info display in chat
+- **Comprehensive Legal Knowledge Base** 🌟:
+  - **Indian Constitutional Law** (60+ topics):
+    - Fundamental Rights (Articles 14-32): Equality, Freedom, Life & Liberty, Education, etc.
+    - Directive Principles of State Policy (Articles 36-51)
+    - Fundamental Duties (Article 51A)
+  - **International Human Rights Frameworks** (7 treaties):
+    - UDHR, ICCPR, ICESCR, CEDAW, CRC, CAT, CRPD
+  - **International Labour Conventions** (ILO standards):
+    - Core Labour Standards, Child Labour, Forced Labour
+  - **Environmental Law**:
+    - Indian environmental statutes, Climate Change, Paris Agreement
+  - **Intellectual Property Rights**:
+    - Patents Act, Copyright Act, Trademarks Act, IP framework
+  - **Commercial Law**:
+    - Companies Act 2013, Competition Law, Insolvency & Bankruptcy Code
+  - **International Trade & Investment**:
+    - WTO Agreements, GATT, TRIPS, FEMA
+  - **Taxation Law**:
+    - GST (structure, compliance, rates), Income Tax Act
+  - **Criminal & Civil Procedure**:
+    - CPC, CrPC, IPC, Indian Evidence Act
+  - **Major Regulatory Acts**:
+    - RTI Act, Consumer Protection Act, Arbitration Act
+  - **Cybercrime Laws**:
+    - IT Act 2000, Budapest Convention, UN Cybercrime Convention
 - Context-aware legal assistance
 - Persistent chat history
 - Real-time response streaming (via polling)
@@ -732,6 +757,94 @@ Your platform will be available at:
 3. **Use strong passwords**: Min 8 characters enforced
 4. **Monitor API usage**: Track Hugging Face quota
 5. **Regular backups**: Database and R2 exports
+
+---
+
+## 📚 Comprehensive Legal Knowledge Base
+
+The platform includes an extensive built-in legal knowledge base covering **100+ legal topics** across multiple domains:
+
+### 🇮🇳 Indian Constitutional Law
+- **Fundamental Rights** (Articles 14-32): Equality, Freedom, Life & Liberty, Against Exploitation, Religion, Cultural & Educational Rights, Constitutional Remedies
+- **Specific Articles**: Article 14 (Equality), 15 (Non-discrimination), 16 (Public Employment), 19 (Six Freedoms), 20 (Criminal Protections), 21 (Life & Liberty), 21A (Education), 22 (Arrest Protections), 23-24 (Exploitation), 25-26 (Religion), 29-30 (Minorities), 32 (Remedies)
+- **Directive Principles of State Policy** (Articles 36-51)
+- **Fundamental Duties** (Article 51A)
+
+### 🌍 International Human Rights Frameworks
+- **UDHR** (Universal Declaration of Human Rights, 1948) - 30 Articles
+- **ICCPR** (International Covenant on Civil and Political Rights, 1966)
+- **ICESCR** (International Covenant on Economic, Social and Cultural Rights, 1966)
+- **CEDAW** (Convention on Elimination of Discrimination Against Women, 1979)
+- **CRC** (Convention on the Rights of the Child, 1989)
+- **CAT** (Convention Against Torture, 1984)
+- **CRPD** (Convention on Rights of Persons with Disabilities, 2006)
+
+### 🏭 International Labour Standards
+- **ILO Conventions**: 8 Fundamental Conventions (Freedom of Association, Forced Labour, Child Labour, Equality)
+- **Child Labour Laws**: ILO C138, C182, Indian regulations
+- **Forced Labour**: ILO C29, C105, Bonded Labour System Abolition Act
+
+### 🌱 Environmental Law
+- **Indian Statutes**: Environment Protection Act, Water Act, Air Act, Forest Conservation Act, Wildlife Protection Act
+- **Climate Change**: UNFCCC, Kyoto Protocol, Paris Agreement, India's NDC commitments
+- **Principles**: Precautionary principle, Polluter pays, Sustainable development
+
+### 💡 Intellectual Property Rights
+- **Patents Act 1970**: Patentability, exclusions, compulsory licensing
+- **Copyright Act 1957**: Works protection, duration, fair dealing, digital rights
+- **Trademarks Act 1999**: Registration, infringement, well-known marks
+- **Overall IP Framework**: Designs, GI, SICL, Trade Secrets, Plant Varieties
+
+### 🏢 Commercial & Corporate Law
+- **Companies Act 2013**: Formation, management, CSR, fraud, NCLT
+- **Competition Act 2002**: Anti-competitive agreements, abuse of dominance, CCI
+- **Insolvency & Bankruptcy Code 2016**: CIRP, liquidation, NCLT, IBC process
+
+### 🌐 International Trade & Investment
+- **WTO Agreements**: GATT, GATS, TRIPS, SPS, TBT, DSU
+- **FEMA 1999**: Current/capital account transactions, FDI policy, ECB, ODI
+
+### 💰 Taxation Law
+- **GST**: CGST, SGST, IGST, UTGST, rates, ITC, compliance, GST Council
+- **Income Tax Act 1961**: Heads of income, assessment, TDS, appeals, transfer pricing
+
+### ⚖️ Procedural & Criminal Law
+- **Code of Civil Procedure 1908**: Jurisdiction, pleadings, evidence, appeals
+- **Code of Criminal Procedure 1973**: Arrest, FIR, investigation, trial, bail
+- **Indian Penal Code 1860**: Offenses, punishments, exceptions
+- **Indian Evidence Act 1872**: Relevancy, proof, admissions, expert evidence
+
+### 📋 Major Regulatory Acts
+- **Right to Information Act 2005**: Access to information, exemptions, penalties
+- **Consumer Protection Act 2019**: Consumer rights, dispute redressal, e-commerce
+- **Arbitration and Conciliation Act 1996**: Domestic/international arbitration, awards
+
+### 🔐 Cybercrime & Data Protection
+- **IT Act 2000**: Sections 43, 66-70, cyber offenses, penalties
+- **Budapest Convention 2001**: International cybercrime treaty
+- **UN Cybercrime Convention 2024**: Global cooperation framework
+- **Data Protection**: DPDP Act 2023, GDPR compliance, IT Rules 2011
+
+### 📊 Knowledge Coverage Statistics
+- **Total Legal Topics**: 100+
+- **Constitutional Articles**: 25+
+- **International Treaties**: 15+
+- **Indian Statutes**: 20+
+- **ILO Conventions**: 8 Core Standards
+- **Knowledge Domains**: 12 major areas
+- **Worker Bundle Size**: 92.15 kB
+
+### 🎯 Example Queries You Can Ask
+- "Explain Article 21 of Indian Constitution"
+- "What is the Budapest Convention on Cybercrime?"
+- "Tell me about ILO conventions"
+- "Explain GST structure in India"
+- "What are the fundamental rights in Indian Constitution?"
+- "What is TRIPS agreement?"
+- "Explain Companies Act 2013"
+- "What is ICCPR?"
+- "Tell me about child labour laws"
+- "What is the Paris Agreement?"
 
 ---
 
