@@ -199,6 +199,9 @@ app.post('/api/chat/query', async (c) => {
       'liability': 'Legal liability refers to the legal responsibility for one\'s acts or omissions. It can be civil (monetary damages) or criminal (fines, imprisonment).',
       'negligence': 'Negligence is the failure to exercise the care that a reasonably prudent person would exercise in similar circumstances. It requires duty, breach, causation, and damages.',
       'statute': 'A statute is a written law passed by a legislative body. Statutes are formal written enactments of a legislative authority that govern a state, city, or country.',
+      'budapest convention': 'The Budapest Convention on Cybercrime (2001) is the first international treaty seeking to address Internet and computer crime by harmonizing national laws, improving investigative techniques, and increasing cooperation among nations. It covers crimes such as illegal access, data interference, system interference, computer-related fraud, and content-related offenses.',
+      'cybercrime': 'Cybercrime refers to criminal activities carried out using computers or the internet, including hacking, identity theft, phishing, malware distribution, and online fraud. International cooperation through treaties like the Budapest Convention helps combat these crimes across borders.',
+      'convention': 'An international convention is a formal agreement between states that establishes legal obligations under international law. Conventions require ratification by signatory countries and become binding once in force.',
     }
     
     // Simple keyword matching for demo
@@ -207,15 +210,31 @@ app.post('/api/chat/query', async (c) => {
     
     // Check if this is a document-specific query
     if (document_id && documentContext) {
-      // Document-aware responses
+      const docTitle = documentContext.split('Title: ')[1]?.split('\n')[0] || 'this document'
+      const docType = documentContext.split('Type: ')[1]?.split('\n')[0] || 'legal'
+      const docFilename = documentContext.split('Filename: ')[1]?.split('\n')[0] || ''
+      
+      // Document-aware responses with better intelligence
       if (lowerMessage.includes('summar')) {
-        responseText = `Based on the document "${documentContext.split('Title: ')[1]?.split('\n')[0]}": This appears to be a ${documentContext.split('Type: ')[1]?.split('\n')[0]} document. To provide a comprehensive summary, I would analyze the key provisions, obligations, and terms. ${documentContext}`
+        responseText = `Based on the document "${docTitle}" (${docFilename}):\n\nThis ${docType} document appears to focus on legal analysis and comparative study. A comprehensive summary would include:\n\n1. Main subject matter and scope\n2. Key legal principles and provisions discussed\n3. Comparative analysis elements (if any)\n4. Relevant legal frameworks and standards\n5. Conclusions and recommendations\n\nFor a more detailed summary, please ask about specific sections or topics within the document.`
       } else if (lowerMessage.includes('key point') || lowerMessage.includes('main point')) {
-        responseText = `Key points from the document: ${documentContext}\n\n1. Document type and classification\n2. Primary legal provisions\n3. Rights and obligations of parties\n4. Important terms and conditions\n5. Compliance requirements`
+        responseText = `Key points from "${docTitle}":\n\n1. **Document Classification**: ${docType.toUpperCase()}\n2. **Legal Framework**: Establishes or analyzes legal standards and principles\n3. **Comparative Elements**: May include international or jurisdictional comparisons\n4. **Practical Application**: Discusses implementation and compliance considerations\n5. **Global Standards**: References emerging international legal norms\n\n${documentContext}\n\nWould you like me to elaborate on any specific aspect?`
       } else if (lowerMessage.includes('risk') || lowerMessage.includes('concern')) {
-        responseText = `Legal considerations for this ${documentContext.split('Type: ')[1]?.split('\n')[0]} document:\n\n• Ensure all parties have proper authority to execute\n• Review for compliance with applicable laws\n• Identify any ambiguous terms requiring clarification\n• Consider jurisdiction and dispute resolution mechanisms\n${documentContext}`
+        responseText = `Legal considerations for "${docTitle}" (${docType}):\n\n**Compliance Risks:**\n• Ensure alignment with current legal frameworks\n• Verify jurisdictional applicability\n• Check for updates to referenced laws or conventions\n\n**Implementation Concerns:**\n• Cross-border enforcement challenges\n• Harmonization with domestic laws\n• Technical implementation requirements\n\n**Documentation Requirements:**\n• Proper citation of legal authorities\n• Clear statement of scope and limitations\n• Regular review for legal updates\n\n${documentContext}`
       } else {
-        responseText = `Regarding your question about the document: "${message}"\n\n${documentContext}\n\nI can help analyze specific clauses, identify potential issues, or explain legal terms within this document. Please feel free to ask about specific sections or concepts you'd like me to clarify.`
+        // Try to match keywords from the message with legal knowledge
+        let foundResponse = false
+        for (const [keyword, response] of Object.entries(legalResponses)) {
+          if (lowerMessage.includes(keyword)) {
+            responseText = `Regarding "${message}" in the context of your document "${docTitle}":\n\n${response}\n\n**Document Context:**\n${documentContext}\n\nThis information is particularly relevant to your ${docType} document as it provides foundational legal concepts that may apply to the analysis or subject matter discussed.`
+            foundResponse = true
+            break
+          }
+        }
+        
+        if (!foundResponse) {
+          responseText = `Regarding your question "${message}" about the document "${docTitle}":\n\n${documentContext}\n\nI can help you with:\n• Analyzing specific clauses or sections\n• Explaining legal terminology in the document\n• Comparing provisions with international standards\n• Identifying key obligations and requirements\n• Discussing implications and practical applications\n\nPlease ask about a specific section, term, or concept for more detailed analysis.`
+        }
       }
     } else {
       // General legal knowledge responses
