@@ -3,10 +3,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp public/static/app.js dist/static/app.js",
+    "dev:sandbox": "wrangler pages dev dist --d1=legal-ai-production --local --ip 0.0.0.0 --port 3000",
     "preview": "wrangler pages dev",
-    "deploy": "npm run build && wrangler pages deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+    "deploy": "npm run build && wrangler pages deploy dist",
+    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name legal-ai-platform",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "db:migrate:local": "wrangler d1 migrations apply legal-ai-production --local",
+    "db:migrate:prod": "wrangler d1 migrations apply legal-ai-production",
+    "clean-port": "fuser -k 3000/tcp 2>/dev/null || true"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20260131.0",
