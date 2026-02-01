@@ -1,0 +1,10 @@
+name = "legal-ai-platform"
+compatibility_date = "2026-02-01"
+pages_build_output_dir = "./dist"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "legal-ai-production"
+database_id = "2e62f66d-97ad-432d-a6b5-3c50db2a7eac"
+migrations_dir = "migrations"
