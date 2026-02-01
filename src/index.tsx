@@ -321,6 +321,14 @@ app.post('/api/documents/upload', async (c) => {
   const payload = await verifyJWT(token, c.env.JWT_SECRET || 'default-secret')
   if (!payload) return c.json({ error: 'Invalid token' }, 401)
   
+  // Check if R2 is available
+  if (!c.env.DOCUMENTS) {
+    return c.json({ 
+      error: 'Document storage not configured. Please enable R2 in Cloudflare Dashboard.',
+      hint: 'Visit https://dash.cloudflare.com/ and enable R2 storage for your account.'
+    }, 503)
+  }
+  
   const formData = await c.req.formData()
   const file = formData.get('file') as File
   const title = (formData.get('title') as string) || file.name
