@@ -153,13 +153,25 @@ app.post('/api/chat/query', async (c) => {
   const payload = await verifyJWT(token, c.env.JWT_SECRET || 'default-secret')
   if (!payload) return c.json({ error: 'Invalid token' }, 401)
   
-  const { message, model, session_id } = await c.req.json()
+  const { message, model, session_id, document_id } = await c.req.json()
+  
+  // If document_id is provided, fetch document info for context
+  let documentContext = ''
+  if (document_id) {
+    const document: any = await c.env.DB.prepare(
+      'SELECT * FROM documents WHERE id = ? AND user_id = ?'
+    ).bind(document_id, payload.userId).first()
+    
+    if (document) {
+      documentContext = `\n\nDocument Context:\n- Title: ${document.title}\n- Type: ${document.document_type}\n- Filename: ${document.filename}\n`
+    }
+  }
   
   let sessionId = session_id
   if (!sessionId) {
     const result = await c.env.DB.prepare(
-      'INSERT INTO chat_sessions (user_id, title, ai_model) VALUES (?, ?, ?)'
-    ).bind(payload.userId, message.substring(0, 50), model || 'flan-t5-base').run()
+      'INSERT INTO chat_sessions (user_id, title, ai_model, document_id) VALUES (?, ?, ?, ?)'
+    ).bind(payload.userId, message.substring(0, 50), model || 'flan-t5-base', document_id || null).run()
     sessionId = result.meta.last_row_id
   }
   
@@ -193,21 +205,36 @@ app.post('/api/chat/query', async (c) => {
     let responseText = ''
     const lowerMessage = message.toLowerCase()
     
-    for (const [keyword, response] of Object.entries(legalResponses)) {
-      if (lowerMessage.includes(keyword)) {
-        responseText = response
-        break
-      }
-    }
-    
-    // Default responses for common queries
-    if (!responseText) {
-      if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-        responseText = 'Hello! I\'m a legal AI assistant. I can help you with questions about contracts, torts, liability, negligence, and other legal concepts. How may I assist you with your legal inquiry today?'
-      } else if (lowerMessage.includes('help')) {
-        responseText = 'I can assist you with:\n• Contract law and formation\n• Tort law and liability\n• Legal terminology\n• Case law interpretation\n• Statutory analysis\n\nPlease ask me any specific legal question, and I\'ll do my best to provide helpful information.'
+    // Check if this is a document-specific query
+    if (document_id && documentContext) {
+      // Document-aware responses
+      if (lowerMessage.includes('summar')) {
+        responseText = `Based on the document "${documentContext.split('Title: ')[1]?.split('\n')[0]}": This appears to be a ${documentContext.split('Type: ')[1]?.split('\n')[0]} document. To provide a comprehensive summary, I would analyze the key provisions, obligations, and terms. ${documentContext}`
+      } else if (lowerMessage.includes('key point') || lowerMessage.includes('main point')) {
+        responseText = `Key points from the document: ${documentContext}\n\n1. Document type and classification\n2. Primary legal provisions\n3. Rights and obligations of parties\n4. Important terms and conditions\n5. Compliance requirements`
+      } else if (lowerMessage.includes('risk') || lowerMessage.includes('concern')) {
+        responseText = `Legal considerations for this ${documentContext.split('Type: ')[1]?.split('\n')[0]} document:\n\n• Ensure all parties have proper authority to execute\n• Review for compliance with applicable laws\n• Identify any ambiguous terms requiring clarification\n• Consider jurisdiction and dispute resolution mechanisms\n${documentContext}`
       } else {
-        responseText = `I understand you're asking about: "${message}". As a legal AI assistant, I can help with contract law, tort law, statutory interpretation, and legal terminology. Could you please provide more specific details about your legal question? For example, are you asking about contracts, liability, negligence, or another legal concept?`
+        responseText = `Regarding your question about the document: "${message}"\n\n${documentContext}\n\nI can help analyze specific clauses, identify potential issues, or explain legal terms within this document. Please feel free to ask about specific sections or concepts you'd like me to clarify.`
+      }
+    } else {
+      // General legal knowledge responses
+      for (const [keyword, response] of Object.entries(legalResponses)) {
+        if (lowerMessage.includes(keyword)) {
+          responseText = response
+          break
+        }
+      }
+      
+      // Default responses for common queries
+      if (!responseText) {
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+          responseText = 'Hello! I\'m a legal AI assistant. I can help you with questions about contracts, torts, liability, negligence, and other legal concepts. You can also upload a legal document and ask me questions about it. How may I assist you with your legal inquiry today?'
+        } else if (lowerMessage.includes('help')) {
+          responseText = 'I can assist you with:\n• Contract law and formation\n• Tort law and liability\n• Legal terminology\n• Case law interpretation\n• Statutory analysis\n• Document analysis and review\n\nYou can upload a legal document using the "Upload Doc" button and ask me specific questions about it. Please ask me any specific legal question, and I\'ll do my best to provide helpful information.'
+        } else {
+          responseText = `I understand you're asking about: "${message}". As a legal AI assistant, I can help with contract law, tort law, statutory interpretation, and legal terminology. I can also analyze legal documents if you upload them. Could you please provide more specific details about your legal question?`
+        }
       }
     }
     
@@ -226,6 +253,26 @@ app.post('/api/chat/query', async (c) => {
   } catch (error) {
     return c.json({ error: 'AI query failed' }, 500)
   }
+})
+
+// Create new chat session
+app.post('/api/chat/sessions', async (c) => {
+  const authHeader = c.req.header('Authorization')
+  if (!authHeader) return c.json({ error: 'Unauthorized' }, 401)
+  
+  const token = authHeader.replace('Bearer ', '')
+  const payload = await verifyJWT(token, c.env.JWT_SECRET || 'default-secret')
+  if (!payload) return c.json({ error: 'Invalid token' }, 401)
+  
+  const { document_id, title, ai_model } = await c.req.json()
+  
+  const result = await c.env.DB.prepare(
+    'INSERT INTO chat_sessions (user_id, title, ai_model, document_id) VALUES (?, ?, ?, ?)'
+  ).bind(payload.userId, title || 'New Chat', ai_model || 'flan-t5-base', document_id || null).run()
+  
+  const session = await c.env.DB.prepare('SELECT * FROM chat_sessions WHERE id = ?').bind(result.meta.last_row_id).first()
+  
+  return c.json({ success: true, session }, 201)
 })
 
 // Get sessions
@@ -313,6 +360,27 @@ app.get('/api/documents/', async (c) => {
   ).bind(payload.userId).all()
   
   return c.json({ success: true, documents: results })
+})
+
+// Get single document
+app.get('/api/documents/:id', async (c) => {
+  const authHeader = c.req.header('Authorization')
+  if (!authHeader) return c.json({ error: 'Unauthorized' }, 401)
+  
+  const token = authHeader.replace('Bearer ', '')
+  const payload = await verifyJWT(token, c.env.JWT_SECRET || 'default-secret')
+  if (!payload) return c.json({ error: 'Invalid token' }, 401)
+  
+  const id = c.req.param('id')
+  const document = await c.env.DB.prepare(
+    'SELECT * FROM documents WHERE id = ? AND user_id = ?'
+  ).bind(id, payload.userId).first()
+  
+  if (!document) {
+    return c.json({ error: 'Document not found' }, 404)
+  }
+  
+  return c.json({ success: true, document })
 })
 
 // Download document

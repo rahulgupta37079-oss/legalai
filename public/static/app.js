@@ -295,17 +295,22 @@ async function loadChatView() {
                     <select id="model-select" class="px-4 py-2 border rounded-lg">
                         ${models.map(m => `<option value="${m.model_id}">${m.model_name}</option>`).join('')}
                     </select>
+                    <button onclick="uploadDocumentInChat()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                        <i class="fas fa-upload mr-2"></i>Upload Doc
+                    </button>
                     <button onclick="startNewChat()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
                         <i class="fas fa-plus mr-2"></i>New Chat
                     </button>
                 </div>
             </div>
             
+            <div id="current-document-info" class="mb-2"></div>
+            
             <div id="chat-messages" class="flex-1 overflow-y-auto bg-gray-50 rounded-lg p-4 mb-4 space-y-4">
                 <div class="text-center text-gray-500 mt-20">
                     <i class="fas fa-robot text-5xl mb-4"></i>
                     <p>Start a conversation with the AI legal assistant</p>
-                    <p class="text-sm mt-2">Ask questions about legal concepts, contracts, or case law</p>
+                    <p class="text-sm mt-2">Upload a document or ask questions about legal concepts</p>
                 </div>
             </div>
             
@@ -362,17 +367,24 @@ async function sendMessage() {
     input.value = '';
     
     try {
+        const requestBody = {
+            session_id: CURRENT_SESSION,
+            message,
+            model
+        };
+        
+        // Include document_id if a document is currently selected
+        if (CURRENT_DOCUMENT && CURRENT_DOCUMENT.id) {
+            requestBody.document_id = CURRENT_DOCUMENT.id;
+        }
+        
         const response = await fetch(`${API_BASE}/chat/query`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${AUTH_TOKEN}`
             },
-            body: JSON.stringify({
-                session_id: CURRENT_SESSION,
-                message,
-                model
-            })
+            body: JSON.stringify(requestBody)
         });
         
         const data = await response.json();
@@ -613,26 +625,207 @@ async function deleteDocument(id) {
     }
 }
 
+// Upload document in chat view
+let CURRENT_DOCUMENT = null;
+
+function uploadDocumentInChat() {
+    const dialog = document.createElement('div');
+    dialog.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+    dialog.innerHTML = `
+        <div class="bg-white rounded-lg p-8 max-w-md w-full mx-4">
+            <h3 class="text-2xl font-bold mb-4">
+                <i class="fas fa-upload text-green-600 mr-2"></i>Upload Document for Chat
+            </h3>
+            <form id="chat-upload-form" onsubmit="handleChatUpload(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Document Title</label>
+                    <input type="text" id="chat-upload-title" required
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">Document Type</label>
+                    <select id="chat-upload-type" class="w-full px-4 py-2 border rounded-lg">
+                        <option value="contract">Contract</option>
+                        <option value="case_law">Case Law</option>
+                        <option value="statute">Statute</option>
+                        <option value="regulation">Regulation</option>
+                        <option value="brief">Brief</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium mb-2">File (PDF, DOC, TXT - Max 50MB)</label>
+                    <input type="file" id="chat-upload-file" required accept=".pdf,.txt,.doc,.docx"
+                           class="w-full px-4 py-2 border rounded-lg">
+                </div>
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-3">
+                    <p class="text-sm text-blue-700">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        After uploading, you can ask questions about this document
+                    </p>
+                </div>
+                <div class="flex space-x-2">
+                    <button type="submit" class="flex-1 bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-upload mr-2"></i>Upload & Chat
+                    </button>
+                    <button type="button" onclick="this.closest('.fixed').remove()"
+                            class="flex-1 bg-gray-400 text-white py-2 rounded-lg hover:bg-gray-500">
+                        Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    `;
+    document.body.appendChild(dialog);
+}
+
+async function handleChatUpload(event) {
+    event.preventDefault();
+    
+    const formData = new FormData();
+    formData.append('title', document.getElementById('chat-upload-title').value);
+    formData.append('document_type', document.getElementById('chat-upload-type').value);
+    formData.append('tags', 'chat-context');
+    formData.append('file', document.getElementById('chat-upload-file').files[0]);
+    
+    try {
+        const response = await fetch(`${API_BASE}/documents/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
+            body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            event.target.closest('.fixed').remove();
+            CURRENT_DOCUMENT = data.document;
+            
+            // Show document info in chat
+            const docInfo = document.getElementById('current-document-info');
+            docInfo.innerHTML = `
+                <div class="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between items-center">
+                    <div class="flex items-center">
+                        <i class="fas fa-file-alt text-green-600 text-2xl mr-3"></i>
+                        <div>
+                            <h4 class="font-bold text-green-900">${escapeHtml(data.document.title)}</h4>
+                            <p class="text-sm text-green-700">
+                                ${data.document.filename} • ${formatFileSize(data.document.file_size)}
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="clearCurrentDocument()" class="text-red-500 hover:text-red-700">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            // Create new chat session with this document
+            await chatWithDocument(data.document.id);
+            
+            // Add system message
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = `
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                    <p class="text-blue-900">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Document loaded:</strong> ${escapeHtml(data.document.title)}
+                    </p>
+                    <p class="text-sm text-blue-700 mt-2">
+                        You can now ask questions about this document. Try asking:
+                        "Summarize this document" or "What are the key points?"
+                    </p>
+                </div>
+            `;
+        } else {
+            alert('Upload failed: ' + (data.error || 'Unknown error'));
+        }
+    } catch (error) {
+        alert('Upload error: ' + error.message);
+    }
+}
+
+function clearCurrentDocument() {
+    CURRENT_DOCUMENT = null;
+    CURRENT_SESSION = null;
+    document.getElementById('current-document-info').innerHTML = '';
+    loadChatView();
+}
+
 async function chatWithDocument(docId) {
     CURRENT_SESSION = null;
     await showView('chat');
     
-    // Create new session with document
-    const response = await fetch(`${API_BASE}/chat/sessions`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${AUTH_TOKEN}`
-        },
-        body: JSON.stringify({
-            document_id: docId,
-            title: 'Document Chat'
-        })
-    });
-    
-    const data = await response.json();
-    if (data.success) {
-        CURRENT_SESSION = data.session.id;
+    try {
+        // Fetch document details
+        const docResponse = await fetch(`${API_BASE}/documents/${docId}`, {
+            headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+        });
+        
+        if (docResponse.ok) {
+            const docData = await docResponse.json();
+            if (docData.success && docData.document) {
+                CURRENT_DOCUMENT = docData.document;
+                
+                // Show document info in chat
+                const docInfo = document.getElementById('current-document-info');
+                if (docInfo) {
+                    docInfo.innerHTML = `
+                        <div class="bg-green-50 border border-green-200 rounded-lg p-3 flex justify-between items-center">
+                            <div class="flex items-center">
+                                <i class="fas fa-file-alt text-green-600 text-2xl mr-3"></i>
+                                <div>
+                                    <h4 class="font-bold text-green-900">${escapeHtml(docData.document.title)}</h4>
+                                    <p class="text-sm text-green-700">
+                                        ${docData.document.filename} • ${formatFileSize(docData.document.file_size)}
+                                    </p>
+                                </div>
+                            </div>
+                            <button onclick="clearCurrentDocument()" class="text-red-500 hover:text-red-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // Create new session with document
+        const response = await fetch(`${API_BASE}/chat/sessions`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${AUTH_TOKEN}`
+            },
+            body: JSON.stringify({
+                document_id: docId,
+                title: `Chat: ${CURRENT_DOCUMENT?.title || 'Document'}`
+            })
+        });
+        
+        const data = await response.json();
+        if (data.success) {
+            CURRENT_SESSION = data.session.id;
+            
+            // Add welcome message
+            const chatMessages = document.getElementById('chat-messages');
+            if (chatMessages) {
+                chatMessages.innerHTML = `
+                    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                        <p class="text-blue-900">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Document loaded! You can now ask questions about <strong>${escapeHtml(CURRENT_DOCUMENT?.title || 'this document')}</strong>.
+                        </p>
+                        <p class="text-sm text-blue-700 mt-2">
+                            Try asking: "Summarize this document" or "What are the key points?"
+                        </p>
+                    </div>
+                `;
+            }
+        }
+    } catch (error) {
+        console.error('Error loading document for chat:', error);
+        alert('Failed to load document for chat');
     }
 }
 
