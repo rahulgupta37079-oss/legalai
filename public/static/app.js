@@ -208,11 +208,11 @@ function showLanding() {
     document.getElementById('dashboard-page').classList.add('hidden');
     
     document.getElementById('nav-buttons').innerHTML = `
-        <button onclick="showLogin()" class="px-6 py-2.5 rounded-xl bg-white text-blue-900 hover:bg-gray-100 transition font-semibold shadow-md">
+        <button onclick="showLogin()" class="px-6 py-2.5 text-gray-700 hover:text-gray-900 font-semibold transition-all hover:scale-105">
             Sign In
         </button>
-        <button onclick="showRegister()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 hover:shadow-lg transition font-semibold transform hover:-translate-y-0.5">
-            Start Free
+        <button onclick="showRegister()" class="px-6 py-2.5 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            Get Started Free
         </button>
     `;
 }
@@ -225,10 +225,10 @@ async function showDashboard() {
     
     document.getElementById('nav-buttons').innerHTML = `
         <div class="flex items-center space-x-4">
-            <span class="text-white px-4 py-2 bg-white bg-opacity-20 rounded-lg backdrop-blur">
+            <span class="px-4 py-2 bg-purple-50 text-purple-700 rounded-lg border border-purple-200 font-medium">
                 <i class="fas fa-user mr-2"></i>${CURRENT_USER.full_name}
             </span>
-            <button onclick="logout()" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 transition">
+            <button onclick="logout()" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white transition font-semibold">
                 <i class="fas fa-sign-out-alt mr-2"></i>Logout
             </button>
         </div>
@@ -242,27 +242,35 @@ async function loadDashboard() {
     
     dashboardContent.innerHTML = `
         <!-- Quick Action Cards -->
-        <div class="grid md:grid-cols-4 gap-4 mb-6">
-            <button onclick="showView('chat')" class="group p-6 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl hover:shadow-xl transition transform hover:-translate-y-1">
-                <i class="fas fa-comments text-4xl mb-3 group-hover:scale-110 transition"></i>
-                <h3 class="font-bold text-lg">AI Legal Assistant</h3>
-                <p class="text-sm text-blue-100 mt-1">Chat with AI</p>
+        <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <button onclick="showView('chat')" class="group p-8 bg-white rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-purple-100 hover:border-purple-300">
+                <div class="w-14 h-14 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <i class="fas fa-comments text-white text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">AI Chat</h3>
+                <p class="text-sm text-gray-600">Legal assistant</p>
             </button>
-            <button onclick="showView('documents')" class="group p-6 bg-gradient-to-br from-green-500 to-green-600 text-white rounded-2xl hover:shadow-xl transition transform hover:-translate-y-1">
-                <i class="fas fa-file-alt text-4xl mb-3 group-hover:scale-110 transition"></i>
-                <h3 class="font-bold text-lg">Documents</h3>
-                <p class="text-sm text-green-100 mt-1">Upload & analyze</p>
+            <button onclick="showView('documents')" class="group p-8 bg-white rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-green-100 hover:border-green-300">
+                <div class="w-14 h-14 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+                    <i class="fas fa-file-alt text-white text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Documents</h3>
+                <p class="text-sm text-gray-600">Upload & analyze</p>
             </button>
-            <button onclick="showView('history')" class="group p-6 bg-gradient-to-br from-purple-500 to-purple-600 text-white rounded-2xl hover:shadow-xl transition transform hover:-translate-y-1">
-                <i class="fas fa-history text-4xl mb-3 group-hover:scale-110 transition"></i>
-                <h3 class="font-bold text-lg">History</h3>
-                <p class="text-sm text-purple-100 mt-1">View past chats</p>
+            <button onclick="showView('history')" class="group p-8 bg-white rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-orange-100 hover:border-orange-300">
+                <div class="w-14 h-14 bg-gradient-to-r from-orange-400 to-pink-500 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+                    <i class="fas fa-history text-white text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">History</h3>
+                <p class="text-sm text-gray-600">Past chats</p>
             </button>
             ${CURRENT_USER.role === 'admin' ? `
-            <button onclick="showView('admin')" class="group p-6 bg-gradient-to-br from-red-500 to-red-600 text-white rounded-2xl hover:shadow-xl transition transform hover:-translate-y-1">
-                <i class="fas fa-cog text-4xl mb-3 group-hover:scale-110 transition"></i>
-                <h3 class="font-bold text-lg">Admin</h3>
-                <p class="text-sm text-red-100 mt-1">Platform stats</p>
+            <button onclick="showView('admin')" class="group p-8 bg-white rounded-2xl hover:shadow-2xl transition-all transform hover:-translate-y-2 border-2 border-red-100 hover:border-red-300">
+                <div class="w-14 h-14 bg-gradient-to-r from-red-400 to-rose-500 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110">
+                    <i class="fas fa-cog text-white text-2xl"></i>
+                </div>
+                <h3 class="font-bold text-xl text-gray-900 mb-2">Admin</h3>
+                <p class="text-sm text-gray-600">Platform stats</p>
             </button>
             ` : ''}
         </div>
@@ -319,7 +327,6 @@ async function showView(view) {
     }
 }
 
-// Chat View Functions - DraftBotPro Style
 async function loadChatView() {
     const viewContent = document.getElementById('view-content');
     
@@ -329,101 +336,82 @@ async function loadChatView() {
     const models = modelsData.models || [];
     
     viewContent.innerHTML = `
-        <div class="flex h-[700px]">
-            <!-- Research Panel Sidebar (DraftBotPro style) -->
-            <div id="research-panel" class="w-80 bg-gray-50 rounded-l-2xl border-r-2 border-gray-200 p-4 overflow-y-auto hidden">
-                <h3 class="font-bold text-lg mb-4 flex items-center">
-                    <i class="fas fa-book text-blue-600 mr-2"></i>
-                    Research Panel
-                </h3>
-                <div id="research-content" class="space-y-3">
-                    <div class="bg-white rounded-lg p-4 border">
-                        <p class="text-sm text-gray-600">
-                            Upload a document or ask legal questions to see relevant research and citations here.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Main Chat Area -->
-            <div class="flex-1 flex flex-col">
-                <!-- Chat Header -->
-                <div class="flex justify-between items-center p-4 border-b-2 border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50 rounded-tr-2xl">
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden" style="height: 700px; display: flex; flex-direction: column;">
+            <!-- Chat Header -->
+            <div class="p-6 border-b border-gray-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="flex justify-between items-center">
                     <div>
-                        <h2 class="text-2xl font-bold text-gray-800">
-                            <i class="fas fa-robot text-blue-600 mr-2"></i>AI Legal Assistant
+                        <h2 class="text-2xl font-black text-white mb-1">
+                            <i class="fas fa-robot mr-2"></i>AI Legal Assistant
                         </h2>
-                        <p class="text-sm text-gray-600 mt-1">Powered by Legal-BERT & FLAN-T5</p>
+                        <p class="text-purple-100 text-sm">Ask anything about Indian law</p>
                     </div>
                     <div class="flex space-x-2">
-                        <button onclick="toggleResearchPanel()" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition text-sm font-semibold">
-                            <i class="fas fa-book mr-1"></i>Research
-                        </button>
-                        <select id="model-select" class="px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold">
+                        <select id="model-select" class="px-4 py-2 bg-white/20 backdrop-blur text-white border border-white/30 rounded-xl text-sm font-semibold">
                             ${models.map(m => `<option value="${m.model_id}">${m.model_name}</option>`).join('')}
                         </select>
-                        <button onclick="uploadDocumentInChat()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition text-sm font-semibold">
+                        <button onclick="uploadDocumentInChat()" class="px-4 py-2 bg-white/20 backdrop-blur text-white rounded-xl hover:bg-white/30 transition text-sm font-semibold border border-white/30">
                             <i class="fas fa-upload mr-1"></i>Upload
                         </button>
-                        <button onclick="startNewChat()" class="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition text-sm font-semibold">
+                        <button onclick="startNewChat()" class="px-4 py-2 bg-white/20 backdrop-blur text-white rounded-xl hover:bg-white/30 transition text-sm font-semibold border border-white/30">
                             <i class="fas fa-plus mr-1"></i>New
                         </button>
                     </div>
                 </div>
-                
-                <!-- Current Document Info -->
-                <div id="current-document-info" class="px-4 pt-2"></div>
-                
-                <!-- Chat Messages -->
-                <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
-                    <div class="text-center text-gray-400 mt-20">
-                        <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-comments text-4xl text-blue-600"></i>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-600">Start a Legal Conversation</p>
-                        <p class="text-sm mt-2 max-w-md mx-auto text-gray-500">
-                            Ask questions about Indian law, upload documents for analysis, or explore our 1M+ legal topics database
-                        </p>
-                        <div class="grid grid-cols-2 gap-2 max-w-xl mx-auto mt-6">
-                            <button onclick="askSample('Explain Article 21 of Indian Constitution')" 
-                                    class="p-3 bg-white rounded-lg hover:shadow-md transition text-left text-sm">
-                                <i class="fas fa-balance-scale text-blue-600 mr-2"></i>
-                                Article 21 Rights
-                            </button>
-                            <button onclick="askSample('What is Section 148A procedure?')" 
-                                    class="p-3 bg-white rounded-lg hover:shadow-md transition text-left text-sm">
-                                <i class="fas fa-file-invoice-dollar text-green-600 mr-2"></i>
-                                Tax Reassessment
-                            </button>
-                            <button onclick="askSample('GST compliance requirements')" 
-                                    class="p-3 bg-white rounded-lg hover:shadow-md transition text-left text-sm">
-                                <i class="fas fa-receipt text-purple-600 mr-2"></i>
-                                GST Laws
-                            </button>
-                            <button onclick="askSample('Companies Act 2013 overview')" 
-                                    class="p-3 bg-white rounded-lg hover:shadow-md transition text-left text-sm">
-                                <i class="fas fa-building text-orange-600 mr-2"></i>
-                                Corporate Law
-                            </button>
-                        </div>
+            </div>
+            
+            <!-- Document Info -->
+            <div id="current-document-info" class="px-6 pt-3"></div>
+            
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-purple-50/30 to-white">
+                <div class="text-center text-gray-400 mt-20">
+                    <div class="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-balance-scale text-3xl text-white"></i>
                     </div>
-                </div>
-                
-                <!-- Chat Input -->
-                <div class="p-4 bg-white border-t-2 border-gray-200 rounded-br-2xl">
-                    <div class="flex space-x-2">
-                        <input type="text" id="chat-input" placeholder="Ask anything about law..." 
-                               class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                               onkeypress="if(event.key === 'Enter') sendMessage()">
-                        <button onclick="sendMessage()" 
-                                class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg transition font-semibold">
-                            <i class="fas fa-paper-plane mr-2"></i>Send
+                    <p class="text-xl font-bold text-gray-700 mb-2">Start Your Legal Research</p>
+                    <p class="text-sm max-w-md mx-auto text-gray-500 mb-6">
+                        Ask questions about Indian law, constitutional rights, corporate compliance, or upload documents for analysis
+                    </p>
+                    <div class="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
+                        <button onclick="askSample('Explain Article 21 of Indian Constitution')" 
+                                class="p-4 bg-white rounded-xl hover:shadow-lg transition text-left border border-gray-100 hover:border-purple-200">
+                            <i class="fas fa-gavel text-purple-600 mr-2"></i>
+                            <span class="text-sm font-medium text-gray-700">Article 21 Rights</span>
+                        </button>
+                        <button onclick="askSample('What is Section 148A procedure?')" 
+                                class="p-4 bg-white rounded-xl hover:shadow-lg transition text-left border border-gray-100 hover:border-purple-200">
+                            <i class="fas fa-file-invoice text-green-600 mr-2"></i>
+                            <span class="text-sm font-medium text-gray-700">Tax Laws</span>
+                        </button>
+                        <button onclick="askSample('GST compliance requirements')" 
+                                class="p-4 bg-white rounded-xl hover:shadow-lg transition text-left border border-gray-100 hover:border-purple-200">
+                            <i class="fas fa-receipt text-orange-600 mr-2"></i>
+                            <span class="text-sm font-medium text-gray-700">GST Compliance</span>
+                        </button>
+                        <button onclick="askSample('Companies Act 2013 overview')" 
+                                class="p-4 bg-white rounded-xl hover:shadow-lg transition text-left border border-gray-100 hover:border-purple-200">
+                            <i class="fas fa-building text-indigo-600 mr-2"></i>
+                            <span class="text-sm font-medium text-gray-700">Corporate Law</span>
                         </button>
                     </div>
-                    <p class="text-xs text-gray-500 mt-2 text-center">
-                        <i class="fas fa-shield-alt mr-1"></i>Your conversations are secure and private
-                    </p>
                 </div>
+            </div>
+            
+            <!-- Chat Input -->
+            <div class="p-6 bg-white border-t border-gray-100">
+                <div class="flex space-x-3">
+                    <input type="text" id="chat-input" placeholder="Ask anything about law..." 
+                           class="flex-1 px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-700 font-medium"
+                           onkeypress="if(event.key === 'Enter') sendMessage()">
+                    <button onclick="sendMessage()" 
+                            class="px-8 py-4 text-white rounded-xl font-bold transition-all hover:scale-105 shadow-lg hover:shadow-xl" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-paper-plane mr-2"></i>Send
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-3 text-center">
+                    <i class="fas fa-shield-alt mr-1"></i>Your conversations are private and secure
+                </p>
             </div>
         </div>
     `;
@@ -462,7 +450,7 @@ async function sendMessage() {
     // Add user message with modern styling
     chatMessages.innerHTML += `
         <div class="flex justify-end animate-fade-in">
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl px-5 py-3 max-w-2xl shadow-md">
+            <div class="px-6 py-4 max-w-2xl rounded-2xl shadow-md text-white font-medium" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <p class="whitespace-pre-wrap">${escapeHtml(message)}</p>
             </div>
         </div>

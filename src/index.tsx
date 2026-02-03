@@ -782,73 +782,181 @@ app.get('/api/models', async (c) => {
   return c.json({ success: true, models: results })
 })
 
-// Main page - using the HTML I created earlier
+// Main page - Modern Dark/Light Theme UI
 app.get('/', (c) => {
   return c.html(`<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal AI Platform - Enterprise Legal Intelligence System</title>
+    <title>LegalAI Pro - AI-Powered Legal Research Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #1E40AF 0%, #0F172A 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+        @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        @keyframes slide-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .float-animation { animation: float 6s ease-in-out infinite; }
+        .pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
+        .slide-up { animation: slide-up 0.6s ease-out; }
+        .glass-morphism { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); }
+        .card-gradient { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .dark-card { background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); }
+        body { background: linear-gradient(to bottom right, #f7fafc, #edf2f7); min-height: 100vh; }
     </style>
 </head>
-<body class="bg-gray-50">
-    <nav class="gradient-bg text-white shadow-lg">
+<body>
+    <!-- Floating Background Elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation"></div>
+        <div class="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 float-animation" style="animation-delay: 4s;"></div>
+    </div>
+
+    <!-- Modern Navigation -->
+    <nav class="relative z-10 bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-200/50 sticky top-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <i class="fas fa-balance-scale text-2xl mr-3"></i>
-                    <span class="text-xl font-bold">Legal AI Platform</span>
+            <div class="flex justify-between items-center h-20">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 hero-gradient rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-scale-balanced text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <span class="text-2xl font-black gradient-text">LegalAI Pro</span>
+                        <div class="text-xs text-gray-500 font-medium">Powered by AI</div>
+                    </div>
                 </div>
-                <div class="flex space-x-4" id="nav-buttons">
-                    <button onclick="showLogin()" class="px-4 py-2 rounded-lg bg-white text-blue-900 hover:bg-gray-100">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                <div class="flex items-center space-x-3" id="nav-buttons">
+                    <button onclick="showLogin()" class="px-6 py-2.5 text-gray-700 hover:text-gray-900 font-semibold transition-all hover:scale-105">
+                        Sign In
                     </button>
-                    <button onclick="showRegister()" class="px-4 py-2 rounded-lg bg-green-500 hover:bg-green-600">
-                        <i class="fas fa-user-plus mr-2"></i>Register
+                    <button onclick="showRegister()" class="px-6 py-2.5 hero-gradient text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105">
+                        Get Started Free
                     </button>
                 </div>
             </div>
         </div>
     </nav>
     
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div id="landing-page">
-            <div class="text-center mb-12">
-                <h1 class="text-5xl font-bold text-gray-900 mb-4">Enterprise Legal AI Platform</h1>
-                <p class="text-xl text-gray-600 mb-8">Powered by Hugging Face Models • Open Source • Enterprise-Grade</p>
-                <button onclick="showRegister()" class="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-lg">
-                    Get Started Free
-                </button>
+            <!-- Hero Section -->
+            <div class="text-center mb-20 slide-up">
+                <div class="inline-block mb-6">
+                    <span class="px-4 py-2 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                        <i class="fas fa-star mr-2"></i>1,000,000+ Legal Topics • AI-Powered
+                    </span>
+                </div>
+                <h1 class="text-6xl md:text-7xl font-black text-gray-900 mb-6 leading-tight">
+                    Legal Research,<br/>
+                    <span class="gradient-text">Reimagined</span>
+                </h1>
+                <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto leading-relaxed">
+                    India's most comprehensive AI legal platform. Get instant answers to complex legal questions, 
+                    analyze documents with AI, and access 1M+ legal topics from constitutional law to corporate compliance.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button onclick="showRegister()" class="px-8 py-4 hero-gradient text-white text-lg font-bold rounded-xl shadow-2xl hover:shadow-purple-500/50 transition-all hover:scale-105">
+                        <i class="fas fa-rocket mr-2"></i>Start Free Trial
+                    </button>
+                    <button onclick="scrollToFeatures()" class="px-8 py-4 bg-white text-gray-900 text-lg font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105 border-2 border-gray-200">
+                        <i class="fas fa-play-circle mr-2"></i>See How It Works
+                    </button>
+                </div>
+                
+                <!-- Stats -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-4xl mx-auto">
+                    <div class="text-center">
+                        <div class="text-4xl font-black gradient-text mb-2">1M+</div>
+                        <div class="text-sm text-gray-600 font-medium">Legal Topics</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-black gradient-text mb-2">24/7</div>
+                        <div class="text-sm text-gray-600 font-medium">AI Assistance</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-black gradient-text mb-2">10K+</div>
+                        <div class="text-sm text-gray-600 font-medium">Active Users</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-black gradient-text mb-2">100%</div>
+                        <div class="text-sm text-gray-600 font-medium">Secure</div>
+                    </div>
+                </div>
             </div>
             
-            <div class="grid md:grid-cols-3 gap-6">
-                <div class="card-hover bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-blue-600 text-3xl mb-4"><i class="fas fa-file-alt"></i></div>
-                    <h3 class="text-xl font-bold mb-2">Document Intelligence</h3>
-                    <p class="text-gray-600">Upload and analyze legal documents with AI-powered insights.</p>
+            <!-- Features Section -->
+            <div id="features" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-black text-gray-900 mb-4">Everything You Need</h2>
+                    <p class="text-lg text-gray-600">Powerful features for modern legal professionals</p>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-green-600 text-3xl mb-4"><i class="fas fa-comments"></i></div>
-                    <h3 class="text-xl font-bold mb-2">AI Chat Assistant</h3>
-                    <p class="text-gray-600">Chat with legal documents using multiple AI models.</p>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border border-gray-100">
+                        <div class="w-14 h-14 hero-gradient rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-brain text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">AI Legal Chat</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Ask any legal question and get instant, accurate answers powered by advanced AI models 
+                            trained on Indian law.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Constitutional Law</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Corporate Compliance</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Taxation & GST</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-r from-green-400 to-emerald-500 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-file-contract text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Document Analysis</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Upload contracts, agreements, or legal documents and get instant AI-powered analysis 
+                            and insights.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Risk Assessment</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Key Points Extraction</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Summary Generation</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-white rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2 border border-gray-100">
+                        <div class="w-14 h-14 bg-gradient-to-r from-orange-400 to-pink-500 rounded-xl flex items-center justify-center mb-6">
+                            <i class="fas fa-database text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-3">Vast Legal Database</h3>
+                        <p class="text-gray-600 mb-4 leading-relaxed">
+                            Access 1M+ legal topics covering all areas of Indian law with structured, 
+                            professional research outputs.
+                        </p>
+                        <ul class="space-y-2 text-sm text-gray-700">
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>1M+ Topics</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Always Updated</li>
+                            <li><i class="fas fa-check text-green-500 mr-2"></i>Citation Ready</li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="card-hover bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-purple-600 text-3xl mb-4"><i class="fas fa-robot"></i></div>
-                    <h3 class="text-xl font-bold mb-2">Multiple AI Models</h3>
-                    <p class="text-gray-600">Legal-BERT, FLAN-T5, and specialized legal language models.</p>
-                </div>
+            </div>
+            
+            <!-- CTA Section -->
+            <div class="hero-gradient rounded-3xl p-12 text-center text-white shadow-2xl">
+                <h2 class="text-4xl font-black mb-4">Ready to Transform Your Legal Research?</h2>
+                <p class="text-xl mb-8 opacity-90">Join thousands of legal professionals using LegalAI Pro</p>
+                <button onclick="showRegister()" class="px-10 py-4 bg-white text-purple-700 text-lg font-bold rounded-xl shadow-xl hover:shadow-2xl transition-all hover:scale-105">
+                    Start Your Free Trial <i class="fas fa-arrow-right ml-2"></i>
+                </button>
             </div>
         </div>
         
         <div id="auth-page" class="hidden">
-            <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
+            <div class="max-w-md mx-auto">
                 <div id="auth-content"></div>
             </div>
         </div>
@@ -858,13 +966,26 @@ app.get('/', (c) => {
         </div>
     </div>
     
-    <footer class="gradient-bg text-white mt-16 py-8">
+    <footer class="relative z-10 bg-gray-900 text-gray-300 mt-20 py-12">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p>&copy; 2026 Legal AI Platform. Apache 2.0 License.</p>
+            <div class="mb-4">
+                <span class="text-2xl font-bold gradient-text">LegalAI Pro</span>
+            </div>
+            <p class="mb-4">&copy; 2026 LegalAI Pro. Apache 2.0 License. All rights reserved.</p>
+            <div class="flex justify-center space-x-6 text-sm">
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <a href="#" class="hover:text-white transition">Terms of Service</a>
+                <a href="#" class="hover:text-white transition">Contact Us</a>
+            </div>
         </div>
     </footer>
     
     <script src="/static/app.js"></script>
+    <script>
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
 </body>
 </html>`)
 })
