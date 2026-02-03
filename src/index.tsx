@@ -340,6 +340,124 @@ app.post('/api/chat/query', async (c) => {
       'gst': 'Goods and Services Tax (GST): Introduced 1 July 2017 through 101st Constitutional Amendment. Destination-based, multi-stage, value-added tax on supply of goods and services. Structure: (1) CGST - Central GST (intra-state supply); (2) SGST - State GST (intra-state); (3) IGST - Integrated GST (inter-state, imports); (4) UTGST - Union Territory GST. Four-tier rate structure: 0% (essential goods), 5%, 12%, 18%, 28% (luxury/sin goods). Composition scheme for small taxpayers (turnover up to ₹1.5 crore). Input Tax Credit (ITC) mechanism. GST Council (Article 279A) - constitutional body recommending rates, exemptions (2/3rd states, 1/3rd Centre). GST Network (GSTN) - IT backbone. Compliance: monthly returns (GSTR-1, GSTR-3B), annual return (GSTR-9). E-way bill for goods movement. Anti-profiteering provisions. Tribunals pending.',
       
       'income tax': 'Income Tax Act, 1961: Direct tax on income. Administered by Central Board of Direct Taxes (CBDT). Assessee categories: Individuals, HUF, Firms, Companies, AOPs, BOIs. Income heads: Salaries, house property, business/profession, capital gains, other sources. Residential status determines tax liability (resident, non-resident, RNOR). New tax regime (optional): lower rates without deductions/exemptions. TDS/TCS provisions. Advance tax. Return filing (ITR-1 to ITR-7). Assessment types: self-assessment, summary assessment, scrutiny assessment, best judgment assessment. Appeals: CIT(A) → ITAT → High Court → Supreme Court. Penalties: under-reporting (50% of tax), misreporting (200%), failure to file return, concealment. Search and seizure powers (Section 132). Transfer pricing provisions for international transactions (Sections 92-92F). GAAR (General Anti-Avoidance Rules) to check tax avoidance.',
+      
+      // === SECTION 148A - REASSESSMENT PROCEDURE ===
+      
+      'section 148a': 'Section 148A of the Income Tax Act, 1961 (introduced by Finance Act, 2021): Establishes mandatory preliminary inquiry procedure before issuing reassessment notice under Section 148. Key provisions: (1) Show-Cause Notice (Section 148A(a)): AO must serve detailed show-cause notice specifying grounds and material on which belief of income escaping assessment is based; (2) Opportunity for Response: Taxpayer given minimum 7 days and up to 30 days to respond, with possibility of requesting extensions; (3) Speaking Order Requirement: AO must consider taxpayer\'s response carefully and issue detailed speaking order addressing each objection if raised; (4) Disclosure Requirements: AO must disclose material or inquiry report forming basis for belief; (5) Reassessment Notice (Section 148): Only after completing above procedure can formal notice be issued; (6) Time Limits: Section 148A notice must be issued within 5 years for escaped income exceeding Rs. 50 lakh; Section 148 notice must follow within 5 years and 3 months; (7) Judicial Safeguards: Courts emphasize failure to follow procedural safeguards can lead to quashing of reassessment notices; reinforces constitutional rights under Articles 14 and 21. Purpose: Enhance transparency, provide taxpayers opportunity to be heard, impose procedural safeguards on tax authorities, align with principles of natural justice and judicial oversight. Recent Amendments (Finance Bill 2024): Clarified timelines to prevent arbitrary reopening; emphasized condition precedent nature of Section 148A inquiry for Section 148 notice.',
+      
+      'section 148': 'Section 148 of the Income Tax Act, 1961: Reassessment of income. Where AO has reason to believe that income chargeable to tax has escaped assessment, he may serve notice on assessee for reassessment. Key changes: Issuance now subject to mandatory preliminary procedure under Section 148A (introduced by Finance Act 2021). Previous discretionary reopening practice significantly constrained. Time limits: Must be issued within 5 years and 3 months from end of assessment year for cases where Section 148A notice issued within 5 years (escaped income exceeding Rs. 50 lakh). Procedural safeguards: Cannot be issued without completing Section 148A inquiry; requires disclosure of material; requires consideration of assessee\'s objections; requires speaking order if objections raised. Judicial interpretation: Non-compliance with Section 148A procedure renders Section 148 notice invalid and subject to quashing.',
+      
+      'reassessment': 'Reassessment under Income Tax Act: Process by which AO reviews and revises a completed assessment if income chargeable to tax has escaped assessment. Governed by Section 147-151 (as amended by Finance Act 2021). Mandatory Procedure (Section 148A): Before issuing reassessment notice under Section 148, AO must: (1) Issue show-cause notice under Section 148A(a) with detailed grounds and material; (2) Provide taxpayer 7-30 days to respond; (3) Consider taxpayer\'s explanation and objections; (4) Issue speaking order if objections raised; (5) Disclose inquiry report or material forming basis of belief. Time Limits: Section 148A notice within 5 years (for escaped income > Rs. 50 lakh); Section 148 notice within 5 years 3 months. Grounds: Reason to believe income has escaped assessment due to: failure to file return, failure to disclose material facts, fraud, collusion, wilful default. Constitutional Safeguards: Articles 14 (equality) and 21 (fair procedure) protect taxpayers; judicial review available; non-compliance with Section 148A leads to quashing of reassessment. Recent Developments: Finance Bill 2024 clarified timelines; Taxmann analysis (May 2025) emphasized Section 148A as condition precedent; courts increasingly stress natural justice principles.',
+      
+      'income tax assessment': 'Income Tax Assessment: Process of determining taxable income and tax liability. Types: (1) Self-Assessment (Section 140A): Taxpayer computes own tax liability while filing return; (2) Summary Assessment (Section 143(1)): Computerized processing of return with intimation to taxpayer; (3) Scrutiny Assessment (Section 143(3)): Detailed examination by AO after issuing notice under Section 143(2); (4) Best Judgment Assessment (Section 144): When assessee fails to comply or cooperate; (5) Reassessment (Sections 147-148, 148A): Revision of completed assessment for escaped income - now requires mandatory Section 148A inquiry before Section 148 notice. Assessment Year: Financial year following the previous year (e.g., AY 2024-25 for income earned in FY 2023-24). Time limits for completion: Generally 21 months from end of assessment year; reassessment within 5 years 3 months (for significant cases). Assessme Order: Must be speaking order if disallowances made; must address all objections raised by assessee. Appeals: CIT(Appeals) → ITAT → High Court → Supreme Court. Recent Changes: Section 148A (Finance Act 2021) introduced mandatory pre-reassessment inquiry; enhanced procedural safeguards; reduced discretionary powers of AO.',
+    }
+    
+    // Helper function to format structured legal research response
+    const formatLegalResearch = (topic: string, content: string): string => {
+      // Check if this is a major legal provision that warrants comprehensive research format
+      const isComprehensiveQuery = lowerMessage.includes('section 148a') || 
+                                   lowerMessage.includes('reassessment') ||
+                                   lowerMessage.includes('explain') ||
+                                   lowerMessage.includes('detail') ||
+                                   lowerMessage.includes('procedure')
+      
+      if (isComprehensiveQuery && (topic.includes('section 148a') || topic.includes('reassessment'))) {
+        return `## 📋 Overview
+
+${content.split('. ')[0]}.
+
+## 🔍 Key Procedural Steps
+
+1. **Issuance of Show-Cause Notice (Section 148A(a))**
+   - AO must serve detailed show-cause notice
+   - Must specify grounds and material for belief of income escaping assessment
+   - Ensures adherence to principles of natural justice
+
+2. **Opportunity for Response**
+   - Taxpayer given minimum 7 days and up to 30 days to respond
+   - Extensions can be requested
+   - Allows presentation of explanations, documents, or objections
+
+3. **Consideration of Explanation and Speaking Order**
+   - AO must consider taxpayer's response carefully
+   - Must issue detailed speaking order if objections raised
+   - Ensures transparency and judicial review
+
+4. **Disclosure of Material and Inquiry Report**
+   - AO must disclose material/inquiry report forming basis for belief
+   - Enables taxpayer to respond meaningfully
+   - Promotes transparency
+
+5. **Issuance of Reassessment Notice (Section 148)**
+   - Only after completing above procedure
+   - Must be issued within 5 years for escaped income > Rs. 50 lakh
+   - Section 148 notice within 5 years 3 months
+
+6. **Judicial Safeguards**
+   - Failure to follow Section 148A procedures can lead to quashing
+   - Reinforces constitutional rights under Articles 14 and 21
+   - Promotes fairness in tax administration
+
+## ⚖️ Legal Provisions Attracted
+
+### Section 148A of the Income Tax Act, 1961
+Before issuing notice under Section 148 for reassessment, the AO shall serve a show-cause notice requiring the assessee to show cause why reassessment should not be initiated. Minimum 7 days and maximum 30 days given to respond. AO must consider explanation before taking further action.
+
+### Section 148 of the Income Tax Act, 1961
+Where AO has reason to believe income chargeable to tax has escaped assessment, he may serve notice for reassessment. Issuance now subject to mandatory Section 148A procedure.
+
+### Time Limits (Finance Bill 2024 Amendments)
+- Section 148A notice: Within 5 years for escaped income > Rs. 50 lakh
+- Section 148 notice: Within 5 years 3 months from end of assessment year
+
+### Speaking Order Requirement
+If assessee raises objections, AO must issue detailed speaking order addressing objections and basis for reopening.
+
+### Disclosure Requirement
+AO must disclose material or inquiry report forming basis for Section 148A notice to ensure transparency.
+
+## 📊 Detailed Analysis
+
+Section 148A represents a significant procedural safeguard in reassessment proceedings, ensuring taxpayers receive a fair chance to contest the reopening of their assessments. It institutionalizes a mandatory show cause and hearing mechanism before any reassessment notice under Section 148 can be issued.
+
+**Key Features:**
+- The AO, upon receiving credible information, must serve Section 148A notice with detailed grounds
+- Shifts process from belief-based unilateral decision to participatory inquiry
+- Taxpayer given 7-30 days (extendable) to submit explanations or objections
+- AO's decision must be reasoned in form of speaking order if objections raised
+- Timelines clarified to prevent indefinite or arbitrary reassessments
+- Non-compliance renders reassessment void or unsustainable
+
+**Constitutional Protection:**
+- Emphasizes transparency by requiring disclosure of facts
+- Strengthens taxpayers' rights under Articles 14 (equality) and 21 (fair procedure)
+- Enables meaningful responses and judicial oversight
+
+## 📅 Recent Developments
+
+**06/08/2025** - Finance Bill 2024 amendments took effect, clarifying timelines: Section 148A notices must be issued within 5 years for escaped income above Rs. 50 lakh; Section 148 notices must follow within 5 years 3 months. Aims to curb arbitrary reopening.
+
+**07/05/2025** - Taxmann published extensive analysis emphasizing Section 148A inquiry is a condition precedent for Section 148 notice. Highlighted need for reasoned and detailed speaking orders.
+
+**08/06/2024** - Judicial interpretations increasingly stress that failure to comply with Section 148A procedure leads to quashing of reassessment notices, reinforcing primacy of natural justice principles.
+
+## 💡 Key Takeaways
+
+✅ Section 148A is **mandatory preliminary inquiry** before Section 148 reassessment notice
+✅ Taxpayers must receive **show-cause notice** with detailed grounds and material
+✅ Minimum **7-30 days response time** (extendable on request)
+✅ AO must issue **speaking order** addressing objections
+✅ **Disclosure of material** required for transparency
+✅ **Time limits strictly enforced**: 5 years for notice, 5 years 3 months for assessment
+✅ **Judicial oversight** ensures constitutional rights protected
+✅ **Non-compliance** leads to quashing of reassessment proceedings
+
+---
+
+This procedure balances tax authorities' power to reassess with protection of taxpayer rights, aligning with principles of natural justice and judicial oversight.`
+      }
+      
+      return content
     }
     
     // Simple keyword matching for demo
@@ -398,9 +516,11 @@ app.post('/api/chat/query', async (c) => {
       }
     } else {
       // General legal knowledge responses
+      let foundKeyword = ''
       for (const [keyword, response] of Object.entries(legalResponses)) {
         if (lowerMessage.includes(keyword)) {
-          responseText = response
+          foundKeyword = keyword
+          responseText = formatLegalResearch(keyword, response)
           break
         }
       }
@@ -408,7 +528,7 @@ app.post('/api/chat/query', async (c) => {
       // Default responses for common queries
       if (!responseText) {
         if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-          responseText = 'Hello! I\'m a legal AI assistant. I can help you with questions about contracts, torts, liability, negligence, and other legal concepts. You can also upload a legal document and ask me questions about it. How may I assist you with your legal inquiry today?'
+          responseText = 'Hello! I\'m a legal AI assistant with comprehensive knowledge of Constitutional law, International frameworks, and Indian legal provisions. I can help you with:\n\n• **Constitutional Rights** (Articles 14-32, Fundamental Rights, DPSP)\n• **Taxation Law** (Income Tax, GST, Section 148A reassessment procedures)\n• **International Law** (UDHR, ICCPR, Budapest Convention, UN treaties)\n• **Commercial Law** (Companies Act, Competition, IBC)\n• **Cybercrime** (IT Act, data protection)\n• **100+ Legal Topics** across 11 major domains\n\nYou can also upload legal documents and ask me questions about them. How may I assist you with your legal inquiry today?'
         } else if (lowerMessage.includes('help')) {
           responseText = 'I can assist you with:\n• Contract law and formation\n• Tort law and liability\n• Legal terminology\n• Case law interpretation\n• Statutory analysis\n• Document analysis and review\n\nYou can upload a legal document using the "Upload Doc" button and ask me specific questions about it. Please ask me any specific legal question, and I\'ll do my best to provide helpful information.'
         } else {
